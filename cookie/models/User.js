@@ -1,6 +1,7 @@
 require('dotenv').config();
 
-const mongoose=require('mongoose');
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 const UserSchema = new mongoose.Schema({
 	email: {
@@ -13,5 +14,11 @@ const UserSchema = new mongoose.Schema({
 			required: [true, "password is missing"],
 	}
 });
+
+UserSchema.methods.comparePassword = async function (candidatePassword) {
+	console.log(candidatePassword);
+    const isMatch = await bcrypt.compare(candidatePassword, this.password);
+    return isMatch;
+}
 
 module.exports = mongoose.model("User", UserSchema);

@@ -8,6 +8,9 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded( {extended: false }));
 
+const cookieParser = require('cookie-parser'); 
+app.use(cookieParser(process.env.COOKIE_SECRET)); 
+
 const auth = require('./routes/auth');
 app.use('/', auth);
 
@@ -16,6 +19,12 @@ const connectDB = require('./db/connect');
 
 // start server
 const port = process.env.PORT || 3000;
+
+
+app.get('/',function(req, res){
+    res.cookie('cookie1', 'This is my first cookie', {signed:true, maxAge: 1000*60*60*24*7, httpOnly: true});
+    res.end('Cookie has been set');
+});
 
 const start = async () => {
 	try {
