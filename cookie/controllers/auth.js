@@ -27,13 +27,11 @@ const login = async(req, res) => {
         throw new UnauthenciatedError('invalid credentials');
     };
 
-    // res.status(StatusCodes.OK).setHeader('Set-Cookie', 'visited=true; Max-Age=1000; HttpOnly').send('hello');
-
     res.status(StatusCodes.OK);
-    res.cookie('token','a', {
+    res.cookie('loginAuth','value', {
         expires: new Date(Date.now() + hour),
         signed:true
-    }).send('aa');
+    }).send('success');
 }
 
 module.exports = login;
