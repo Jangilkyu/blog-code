@@ -1,5 +1,9 @@
+// basic
 require('dotenv').config();
 require('express-async-errors');
+
+// db
+const connectDB = require('./db/connect');
 
 // server
 const express = require('express');
@@ -9,11 +13,13 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded( {extended: false }));
 
+// routes
 const userRouter = require('./routes/auth');
-app.use('/v1/api', userRouter);
+app.use('/api/v1/users', userRouter);
 
-// db
-const connectDB = require('./db/connect');
+// error-handling middleware
+const errorHandleMiddleware = require('./middleware/error-handler');
+app.use(errorHandleMiddleware);
 
 // start server
 const port = 3000;
