@@ -59,12 +59,13 @@ const UserSchema = new mongoose.Schema(
     });
 
 
-    UserSchema.pre('update', async function () {
-        if (!this.isModified('password')) {
-            return;
+    UserSchema.pre('findOneAndUpdate', async function () {
+        const docToUpdate = await this.model.findOne(this.getQuery());
+        
+        if (docToUpdate.password !== this._update.password) {
+            const salt = await bcrypt.genSalt(10);
+            this._update.password = await bcrypt.hash(this._update.password, salt);
         }
-        const salt = await bcrypt.genSalt(10);
-        this.password = await bcrypt.hash(this.password, salt);
     });
 
     UserSchema.methods.comparePassword = async function (candidatePassword) {
